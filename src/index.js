@@ -9,5 +9,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <App />
+    {/* App, the root component, sits as the top of the component tree */}
+    {/* further components are all nested below App.js (eg. Navar.js) */}
   </React.StrictMode>
 );
