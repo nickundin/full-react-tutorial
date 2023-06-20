@@ -2,40 +2,32 @@ import { useState, useEffect } from 'react';
 import BlogList from './BlogList';
 
 const Home = () => {
-  const [blogs, setBlogs] = useState([
-    { title: 'My new website', body: 'lorem ipsum...', author: 'mario', id: 1 },
-    { title: 'Welcome party!', body: 'lorem ipsum...', author: 'yoshi', id: 2 },
-    {
-      title: 'Web dev top tips',
-      body: 'lorem ipsum...',
-      author: 'mario',
-      id: 3,
-    },
-  ]);
-
-  const [name, setName] = useState('mario');
-
-  // use setBlogs to update the state (makes sense, since the blogs are defined here!)
-  // to use it, simply pass in the newly updated value that you want the state to take
-  const handleDelete = (id) => {
-    const newBlogs = blogs.filter((blog) => blog.id !== id);
-    setBlogs(newBlogs);
-  };
+  const [blogs, setBlogs] = useState(null);
 
   // the useEffect hook runs every time the DOM re-renders
   // this hook has access to the state (in this case, blogs)
   // DO NOT update state inside useEffect, as that causes an infinite loop
   // to control when useEffect runs, pass in a "dependency array" containing state values as a second argument
+  // fetch returns a promise, so you can attach a "then" method
   useEffect(() => {
-    console.log('use effect ran');
-    console.log(name);
-  }, [name]);
+    fetch('http://localhost:8000/blogs')
+      .then((res) => {
+        return res.json(); // uses the fetch API to parse the json into a JS object
+        // note that in db.json, the first "blogs" just indicates the name of the path
+        // everything AFTER that is the actual JS object!
+      })
+      .then((data) => {
+        console.log(data);
+        setBlogs(data);
+      }); // again, json() returns a promise, so tack on a .then
+  }, []); // empty = only on initial render, not whenever data changes
 
   return (
     <div className='home'>
-      <BlogList blogs={blogs} title='All blogs!' handleDelete={handleDelete} />
-      <button onClick={() => setName('luigi')}>change name</button>
-      <p>{name}</p>
+      {/* blogs is initially null, so on first loading, null is passed as a prop */}
+      {/* thus, you don't want to output Bloglist until there is a value for blogs */}
+      {/* by using a logical and, you can check to see if blogs exists first */}
+      {blogs && <BlogList blogs={blogs} />}
     </div>
   );
 };
