@@ -3,6 +3,7 @@ import BlogList from './BlogList';
 
 const Home = () => {
   const [blogs, setBlogs] = useState(null);
+  const [isPending, setIsPending] = useState(true);
 
   // the useEffect hook runs every time the DOM re-renders
   // this hook has access to the state (in this case, blogs)
@@ -19,6 +20,7 @@ const Home = () => {
       .then((data) => {
         console.log(data);
         setBlogs(data);
+        setIsPending(false);
       }); // again, json() returns a promise, so tack on a .then
   }, []); // empty = only on initial render, not whenever data changes
 
@@ -27,6 +29,8 @@ const Home = () => {
       {/* blogs is initially null, so on first loading, null is passed as a prop */}
       {/* thus, you don't want to output Bloglist until there is a value for blogs */}
       {/* by using a logical and, you can check to see if blogs exists first */}
+      {/* likewise, you can use it to show a loading message, at least until it is no longer loading */}
+      {isPending && <div>Loading...</div>}
       {blogs && <BlogList blogs={blogs} />}
     </div>
   );
