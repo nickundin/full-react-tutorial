@@ -7,6 +7,7 @@
 const BlogList = ({ blogs, title }) => {
   return (
     <div className='blog-list'>
+      <h2>{title}</h2>
       {blogs.map((blog) => (
         // ALWAYS add a unique key attribute to each item that you output!
         // note the use of the MAP method, rather than a for-of loop, to output the blogs stored in state
