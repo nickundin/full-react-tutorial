@@ -12,11 +12,19 @@ const Home = () => {
       id: 3,
     },
   ]);
+
+  // use setBlogs to update the state (makes sense, since the blogs are defined here!)
+  // to use it, simply pass in the newly updated value that you want the state to take
+  const handleDelete = (id) => {
+    const newBlogs = blogs.filter((blog) => blog.id !== id);
+    setBlogs(newBlogs);
+  };
+
   return (
     <div className='home'>
       {/* note the use of the filter method below, demonstrating the reusability of
       React components */}
-      <BlogList blogs={blogs} title='All blogs!' />
+      <BlogList blogs={blogs} title='All blogs!' handleDelete={handleDelete} />
       <BlogList
         blogs={blogs.filter((blog) => blog.author === 'mario')}
         title="Mario's blogs"

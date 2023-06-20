@@ -4,7 +4,7 @@
 // ALL PROPERTIES ARE INCLUDED ON THE PROPS OBJECT, WHICH EVERY COMPONENT HAS
 
 // NOTE THE USE OF OBJECT DESTRUCTURING TO GRAB PROPERTIES FROM THE PROPS OBJECT
-const BlogList = ({ blogs, title }) => {
+const BlogList = ({ blogs, title, handleDelete }) => {
   return (
     <div className='blog-list'>
       <h2>{title}</h2>
@@ -12,8 +12,9 @@ const BlogList = ({ blogs, title }) => {
         // ALWAYS add a unique key attribute to each item that you output!
         // note the use of the MAP method, rather than a for-of loop, to output the blogs stored in state
         <div className='blog-preview' key={blog.id}>
-          <h2>{title}</h2>
+          <h2>{blog.title}</h2>
           <p>Written by {blog.author}</p>
+          <button onClick={() => handleDelete(blog.id)}>delete blog</button>
         </div>
       ))}
     </div>
