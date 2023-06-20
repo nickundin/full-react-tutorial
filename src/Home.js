@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BlogList from './BlogList';
 
 const Home = () => {
@@ -13,6 +13,8 @@ const Home = () => {
     },
   ]);
 
+  const [name, setName] = useState('mario');
+
   // use setBlogs to update the state (makes sense, since the blogs are defined here!)
   // to use it, simply pass in the newly updated value that you want the state to take
   const handleDelete = (id) => {
@@ -20,15 +22,20 @@ const Home = () => {
     setBlogs(newBlogs);
   };
 
+  // the useEffect hook runs every time the DOM re-renders
+  // this hook has access to the state (in this case, blogs)
+  // DO NOT update state inside useEffect, as that causes an infinite loop
+  // to control when useEffect runs, pass in a "dependency array" containing state values as a second argument
+  useEffect(() => {
+    console.log('use effect ran');
+    console.log(name);
+  }, [name]);
+
   return (
     <div className='home'>
-      {/* note the use of the filter method below, demonstrating the reusability of
-      React components */}
       <BlogList blogs={blogs} title='All blogs!' handleDelete={handleDelete} />
-      <BlogList
-        blogs={blogs.filter((blog) => blog.author === 'mario')}
-        title="Mario's blogs"
-      />
+      <button onClick={() => setName('luigi')}>change name</button>
+      <p>{name}</p>
     </div>
   );
 };
