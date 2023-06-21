@@ -13,7 +13,10 @@ const useFetch = (url) => {
   // to control when useEffect runs, pass in a "dependency array" containing state values as a second argument
   // fetch returns a promise, so you can attach a "then" method
   useEffect(() => {
-    fetch(url)
+    // once we associate this controller with a fetch request, we can use the controller to STOP the request
+    const abortCont = new AbortController();
+
+    fetch(url, { signal: abortCont.signal }) // associates abortCont with the fetch function
       .then((res) => {
         if (!res.ok) {
           // use res.ok to check if the server response is good
@@ -31,9 +34,17 @@ const useFetch = (url) => {
         setError(null); // if you fetch the data successfully, error should then become null
       })
       .catch((err) => {
-        setIsPending(false); // in order to avoid showing 'loading' on the error screen
-        setError(err.message);
+        // if the error is an abort error, do NOT update the state
+        if (err.name === 'AbortError') {
+          console.log('fetch aborted');
+        } else {
+          setIsPending(false); // in order to avoid showing 'loading' on the error screen
+          setError(err.message);
+        }
       });
+    return () => {
+      abortCont.abort(); // aborts the fetch function
+    };
   }, [url]); // url is a dep because whenever the url changes, it will rerun this function to get the data for that endpoint!
 
   // with custom hooks, you can return any value you want!
